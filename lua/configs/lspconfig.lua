@@ -1,11 +1,20 @@
--- EXAMPLE 
-local on_attach = require("nvchad.configs.lspconfig").on_attach
-local on_init = require("nvchad.configs.lspconfig").on_init
-local capabilities = require("nvchad.configs.lspconfig").capabilities
+-- EXAMPLE
+local configs = require "nvchad.configs.lspconfig"
+
+local on_attach = configs.on_attach
+local on_init = configs.on_init
+local capabilities = configs.capabilities
 
 local lspconfig = require "lspconfig"
 local util = require "lspconfig/util"
-local servers = { "html", "cssls" }
+local servers = {
+  "html",
+  "cssls",
+  "tsserver",
+  "clangd",
+  "kotlin_language_server",
+  -- "rust_analyzer", -- DON'T add "rust_analyzer" here because we use "rusteacionvim" plugin so this would cause conflicts
+}
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
@@ -15,25 +24,3 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
-
--- typescript
-lspconfig.tsserver.setup {
-  on_attach = on_attach,
-  on_init = on_init,
-  capabilities = capabilities,
-}
-
--- rust
-lspconfig.rust_analyzer.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = {"rust"},
-  root_dir = util.root_pattern("Cargo.toml"),
-  settings = {
-    ['rust-analyzer'] = {
-      cargo = {
-        allFeatures = true,
-      }
-    }
-  }
-}
